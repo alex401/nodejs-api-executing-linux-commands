@@ -3,6 +3,7 @@ var mysql     =    require('mysql');
 var bodyParser = require('body-parser');
 var app       =    express();
 const child_process = require('child_process');
+const userconnect = "alex@customer1:password01"
 
  // parse application/x-www-form-urlencoded
  app.use(bodyParser.urlencoded({ extended: false }));
@@ -40,7 +41,7 @@ const child_process = require('child_process');
 app.get('/api/applications', function (req, res, next){
   console.log('Spawning curl');
   var result ='';
-  var curlProc = child_process.exec('/usr/bin/curl --user alex@customer1:* "http://pwc.loc:8090/controller/rest/applications?output=json"');
+  var curlProc = child_process.exec('/usr/bin/curl --user '+ userconnect +' "http://pwc.loc:8090/controller/rest/applications?output=json"');
   curlProc.stdout.on('data', function(data) {
     result += data;
 });
@@ -62,7 +63,7 @@ app.get('/api/applications/metrics', function (req, res, next){
   console.log('Spawning curl');
   var result =[];
   //username and password should be 111 parameters
-  var curlProc = child_process.exec('/usr/bin/curl --user alex@customer1:* "http://pwc.loc:8090/controller/rest/applications/?output=json"');
+  var curlProc = child_process.exec('/usr/bin/curl --user '+ userconnect +' "http://pwc.loc:8090/controller/rest/applications/?output=json"');
   curlProc.stdout.on('data', function(data) {
 
     result += data;
@@ -78,7 +79,7 @@ app.get('/api/applications/metrics', function (req, res, next){
         //for each application, get latest metrics and past metrics
         for (i = 0; i < result.length; ++i) {
           temp = result[i];
-          var curlProc2 = child_process.exec('/usr/bin/curl --user alex@customer1:* "http://pwc.loc:8090/controller/rest/applications/'+temp.id+'?output=json"');
+          var curlProc2 = child_process.exec('/usr/bin/curl --user '+ userconnect +' "http://pwc.loc:8090/controller/rest/applications/'+temp.id+'?output=json"');
         //  console.log(i + "huhu")
           curlProc2.stdout.on('data', function(data) {
 
