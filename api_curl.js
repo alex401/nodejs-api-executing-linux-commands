@@ -35,7 +35,7 @@ const userconnect = "alex@customer1:password01"
 
  //
  // Return list of applications for a given controller
- //
+ // * to be added : try / catch if child_process fails
  //
 
 app.get('/api/applications', function (req, res, next){
@@ -55,61 +55,22 @@ app.get('/api/applications', function (req, res, next){
 });
 
 //
-// Return list of response time past and presnet by application for a given controller
+// Return list of response time past and present by application for a given controller
+// * Create array of applications with past and present avg resp. time.
 //
 //
 
 app.get('/api/applications/metrics', function (req, res, next){
   console.log('Spawning curl');
-  var result =[];
-  //username and password should be 111 parameters
-  var curlProc = child_process.exec('/usr/bin/curl --user '+ userconnect +' "http://pwc.loc:8090/controller/rest/applications/?output=json"');
-  curlProc.stdout.on('data', function(data) {
-
-    result += data;
-  });
-  curlProc.on('exit', () => {
-    result= JSON.parse(result);
-          console.log('process exit');
-        //  console.log(result);
-        //  res.send(result);
-        console.log(result.length)
-
-        // TO IMPLEMENT
-        //for each application, get latest metrics and past metrics
-        for (i = 0; i < result.length; ++i) {
-          temp = result[i];
-          var curlProc2 = child_process.exec('/usr/bin/curl --user '+ userconnect +' "http://pwc.loc:8090/controller/rest/applications/'+temp.id+'?output=json"');
-        //  console.log(i + "huhu")
-          curlProc2.stdout.on('data', function(data) {
-
-            temp += data;
-            console.log(data)
-          });
-        //  console.log(temp)
-        }
-      });
 });
+
+//
+// Where everything starts
+// * configure port according to company policies 
+//
 
  app.listen(3000);
  console.log("magic happen on port 3000");
-
-
-
-/// ****************************
-/// UTILS
-/// ****************************
-function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [year, month, day].join('-');
-}
 
 
 //-------------------------------------------
