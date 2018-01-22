@@ -56,24 +56,3 @@ app.get('/api/applications/metrics', function (req, res, next){
 
  app.listen(3000);
  console.log("magic happen on port 3000");
-
-
-//-------------------------------------------
-
-// Constructor
-function Applications(id, name, comment, pastaverage, currentaverage) {
-  // always initialize all instance properties
-  this.id = id;
-  this.name = name;
-  this.comment = comment;
-  this.pastaverage = pastaverage;
-  this.currentaverage = currentaverage;
-
-};
-// class methods
-Applications.prototype.foobar = function() {
-
-};
-
-// export the class
-module.exports = Applications;
