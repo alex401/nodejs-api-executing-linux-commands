@@ -1,9 +1,9 @@
-var express   =    require("express");
-var mysql     =    require('mysql');
+var express = require('express');
 var bodyParser = require('body-parser');
-var app       =    express();
-const child_process = require('child_process');
-const userconnect = "alex@customer1:password01"
+const childProcess = require('child_process');
+const userconnect = "alex@customer1:password01";
+var controllerUrl = "";
+var app = express();
 
  // parse application/x-www-form-urlencoded
  app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,18 +17,6 @@ const userconnect = "alex@customer1:password01"
    next();
  });
 
-/* Are we going to create a DB ? keeping it just in case
- */
-
-  var connection = mysql.createConnection({
-   host     : 'localhost',
-   user     : 'root',
-   password : 'root',
-   database : 'dbname'
- });
-
-  //  connection.connect();
-
  app.get("/",function(req,res){
   console.log("someone connected");
  });
@@ -39,16 +27,13 @@ const userconnect = "alex@customer1:password01"
  //
 
 app.get('/api/applications', function (req, res, next){
-  console.log('Spawning curl');
   var result ='';
-  var curlProc = child_process.exec('/usr/bin/curl --user '+ userconnect +' "http://pwc.loc:8090/controller/rest/applications?output=json"');
+  var curlProc = childProcess.exec('/usr/bin/curl --user '+ userconnect +' "http://pwc.loc:8090/controller/rest/applications?output=json"');
   curlProc.stdout.on('data', function(data) {
     result += data;
 });
   curlProc.on('exit', () => {
           result= JSON.parse(result);
-          console.log('process exit');
-          console.log(result.length);
           res.send(result);
           //res.send();
       });
@@ -66,7 +51,7 @@ app.get('/api/applications/metrics', function (req, res, next){
 
 //
 // Where everything starts
-// * configure port according to company policies 
+// * configure port according to company policies
 //
 
  app.listen(3000);
@@ -84,7 +69,7 @@ function Applications(id, name, comment, pastaverage, currentaverage) {
   this.pastaverage = pastaverage;
   this.currentaverage = currentaverage;
 
-}
+};
 // class methods
 Applications.prototype.foobar = function() {
 
